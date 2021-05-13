@@ -1,7 +1,8 @@
+source(package_install.R)
+
 library(shiny)
 library(ggplot2)
 library(Seurat)
-library(devtools)
 library(dplyr)
 library(labeling)
 
