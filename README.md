@@ -1,7 +1,7 @@
 # Single-Cell-RNAseq-Visualization
 A visualization tool for single cell RNA sequencing data.
 
-#In your R or Rstudio console, run the following code:
+# In your R or Rstudio console, run the following code:
 
 ```
 library(shiny)
