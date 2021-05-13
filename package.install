@@ -1,0 +1,5 @@
+if (!require("shiny")) install.packages("shiny", repos="http://cran.us.r-project.org")
+if (!require("ggplot2")) install.packages("ggplot2", repos="http://cran.us.r-project.org")
+if (!require("Seurat")) install.packages("Seurat", repos="http://cran.us.r-project.org")
+if (!require("dplyr")) install.packages("dplyr", repos="http://cran.us.r-project.org")
+if (!require("labeling")) install.packages("labeling", repos="http://cran.us.r-project.org")
