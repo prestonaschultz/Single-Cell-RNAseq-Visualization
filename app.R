@@ -59,6 +59,7 @@ ui=fluidPage(
                            p("Large file sizes are normal for single cell analysis. If the application is not responding (especially when looking at Top 10 Markers Heatmap and the Results table), give it a few minutes."),
                            br(),
                            p("Developed by Preston Schultz as a senior capstone project by the University of Cincinnati and Dr. Samantha Brugmann's lab at Cincinnati Children's Hospital.")),
+                           p("For questions, please contact Preston using the following email: prestonaschultz@gmail.com"),
                   tabPanel("Plots", downloadButton('downloadPlot', 'Download Plot'), plotOutput("contents")),
                   tabPanel("Results/Data Table", DT::dataTableOutput("result"), downloadButton('downloadResult', 'Download Results'))
       )
