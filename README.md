@@ -14,7 +14,7 @@ Run this code in your R console. The single cell tool should pop up once everyth
 
 ```
 library(shiny)
-runGitHub("Single-Cell-RNAseq-Visualization", "prestonaschultz", launch.browser = TRUE, ref="main")
+runGitHub("Single-Cell-RNAseq-Visualization", "prestonaschultz", launch.browser = TRUE, ref="old")
 ```
 
 This should launch the site as a web browser. If you look in your R console, you can see all of the package installations, changes, and working parts of the site. 
