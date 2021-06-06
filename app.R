@@ -14,7 +14,7 @@ ui=fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      fileInput("file1", "Upload Seurat R File", multiple=F, accept=".Robj"),
+      fileInput("file1", "Upload Seurat R File", multiple=F, accept=".Robj, .RData"),
       
       selectInput("Module", "Chose a graph type:", choices=c("UMAP", "tSNE", "FeaturePlot", "Violin Plot", "Dot Plot", "Heatmap", "Ridge Plot")),
       
@@ -59,13 +59,14 @@ ui=fluidPage(
                            p("Large file sizes are normal for single cell analysis. If the application is not responding (especially when looking at Top 10 Markers Heatmap and the Results table), give it a few minutes."),
                            br(),
                            p("Developed by Preston Schultz as a senior capstone project by the University of Cincinnati and Dr. Samantha Brugmann's lab at Cincinnati Children's Hospital.")),
-                           p("For questions, please contact Preston using the following email: prestonaschultz@gmail.com"),
+                          p("For questions, please contact Preston using the following email: prestonaschultz@gmail.com"),
                   tabPanel("Plots", downloadButton('downloadPlot', 'Download Plot'), plotOutput("contents")),
                   tabPanel("Results/Data Table", DT::dataTableOutput("result"), downloadButton('downloadResult', 'Download Results'))
       )
     )
   )
 )
+
 
 server=function(input,output,session) {
   
@@ -74,8 +75,8 @@ server=function(input,output,session) {
     if (is.null(inFile))
       return(NULL)
     load(inFile$datapath)
-    M=UpdateSeuratObject(M)
-    genes=rownames(M)
+    seurat.object=UpdateSeuratObject(seurat.object)
+    genes=rownames(seurat.object)
     genes=data.frame(genes)
     genes=genes$genes
     updateSelectInput(session, "scGene",
@@ -88,43 +89,43 @@ server=function(input,output,session) {
     if (is.null(inFile))
       return(NULL)
     load(inFile$datapath)
-    M=UpdateSeuratObject(M)
-    DefaultAssay(M)="RNA"
-    Idents(M)=M@meta.data$res.1
-    return(M)
+    seurat.object=UpdateSeuratObject(seurat.object)
+    DefaultAssay(seurat.object)="RNA"
+    Idents(seurat.object)=seurat.object@meta.data$seurat_clusters
+    return(seurat.object)
   })
   
   SingleCellMarkers=reactive({
-    res.1=SingleCell()
-    if (is.null(res.1))
+    seurat_clusters=SingleCell()
+    if (is.null(seurat_clusters))
       return(NULL)
-    marker_clusters=FindAllMarkers(res.1)
+    marker_clusters=FindAllMarkers(seurat_clusters)
     return(marker_clusters)
   })
   
   SingleCellPlot=reactive({
-    M=SingleCell()
+    seurat.object=SingleCell()
     if(input$Module=="UMAP"){
-      UMAPPlot(M, label=T, pt.size=2)
+      UMAPPlot(seurat.object, label=T, pt.size=2)
     }
     else if(input$Module=="tSNE"){
-      TSNEPlot(M, label=T, pt.size=2)
+      TSNEPlot(seurat.object, label=T, pt.size=2)
     }
     else if(input$Module=="FeaturePlot"){
-      FeaturePlot(M, features=input$scGene, pt.size=2, order=T)
+      FeaturePlot(seurat.object, features=input$scGene, pt.size=2, order=T)
     }
     else if(input$Module=="Violin Plot"){
-      VlnPlot(M, features=input$scGene) + RotatedAxis()
+      VlnPlot(seurat.object, features=input$scGene) + RotatedAxis()
     }
     else if(input$Module=="Dot Plot"){
-      DotPlot(M, features=input$scGene) + RotatedAxis()
+      DotPlot(seurat.object, features=input$scGene) + RotatedAxis()
     }
     else if(input$Module=="Heatmap"){
       top10=SingleCellMarkers() %>% group_by(cluster)	%>% top_n(n=10, wt=avg_logFC)
-      DoHeatmap(M, features=top10$gene)
+      DoHeatmap(seurat.object, features=top10$gene)
     }
     else if(input$Module=="Ridge Plot"){
-      RidgePlot(M, features=input$scGene, ncol=2)
+      RidgePlot(seurat.object, features=input$scGene, ncol=2)
     }
   })
   
