@@ -96,10 +96,10 @@ server=function(input,output,session) {
   })
   
   SingleCellMarkers=reactive({
-    seurat_clusters=SingleCell()
-    if (is.null(seurat_clusters))
+    seurat.object=SingleCell()
+    if (is.null(seurat.object))
       return(NULL)
-    marker_clusters=FindAllMarkers(seurat_clusters)
+    marker_clusters=FindAllMarkers(seurat.object)
     return(marker_clusters)
   })
   
